@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.pytest_cache/
+
+# uv / virtualenv
+.venv/
+venv/
+# uv.lock é commitado — garante reprodutibilidade do pipeline no GitHub Actions
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Cache local do coletor (artefatos de debug)
+.cache/
+*.log

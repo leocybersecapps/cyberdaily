@@ -1,0 +1,71 @@
+# CyberDaily — fontes de notícias
+#
+# Estrutura:
+#   - name: nome legível da fonte (aparece no site)
+#   - url: URL do feed RSS/Atom (OBRIGATÓRIO HTTPS)
+#   - tier: 1 = primária/autoritativa (vendor threat intel, avisos oficiais)
+#           2 = veículo de notícias principal
+#   - tags: metadados para filtro/debug (opcional)
+#
+# Regra: rejeitar qualquer feed que não responda 200 com TLS válido.
+# Para adicionar: confirmar URL do RSS no site da fonte antes de commitar.
+
+sources:
+  # ── Tier 1 ──────────────────────────────────────────────────────
+  - name: CISA Cybersecurity Advisories
+    url: https://www.cisa.gov/cybersecurity-advisories/all.xml
+    tier: 1
+    tags: [advisory, gov]
+
+  - name: Cisco Talos
+    url: https://blog.talosintelligence.com/rss/
+    tier: 1
+    tags: [threat-intel, vendor]
+
+  - name: Palo Alto Unit 42
+    url: https://unit42.paloaltonetworks.com/feed/
+    tier: 1
+    tags: [threat-intel, vendor]
+
+  - name: Schneier on Security
+    url: https://www.schneier.com/feed/atom/
+    tier: 1
+    tags: [analysis, opinion]
+
+  - name: SANS ISC Diary
+    url: https://isc.sans.edu/rssfeed.xml
+    tier: 1
+    tags: [threat-intel, community]
+
+  # ── Tier 2 ──────────────────────────────────────────────────────
+  - name: The Hacker News
+    url: https://feeds.feedburner.com/TheHackersNews
+    tier: 2
+    tags: [news]
+
+  - name: BleepingComputer
+    url: https://www.bleepingcomputer.com/feed/
+    tier: 2
+    tags: [news]
+
+  - name: Krebs on Security
+    url: https://krebsonsecurity.com/feed/
+    tier: 2
+    tags: [news, investigative]
+
+  - name: Dark Reading
+    url: https://www.darkreading.com/rss.xml
+    tier: 2
+    tags: [news]
+
+  - name: SecurityWeek
+    url: https://www.securityweek.com/feed/
+    tier: 2
+    tags: [news]
+
+# Candidatas para adicionar depois (confirmar URL de RSS antes):
+#   - Google TAG (Threat Analysis Group)
+#   - Mandiant / Google Cloud Threat Intelligence
+#   - Microsoft Threat Intelligence Blog
+#   - Risky Business News
+#   - CISA KEV (como feed JSON — tratamento especial no collector)
