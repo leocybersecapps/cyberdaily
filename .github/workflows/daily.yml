@@ -18,6 +18,10 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Força actions JavaScript a rodar em Node.js 24 (Node 20 deprecado em set/2026).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -44,6 +48,8 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
