@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import jinja2
 
@@ -13,6 +14,7 @@ TEMPLATE_DIR = Path("templates")
 TEMPLATE_NAME = "index.html.j2"
 OUTPUT_DIR = Path("docs")
 OUTPUT_FILE = OUTPUT_DIR / "index.html"
+BRT = ZoneInfo("America/Sao_Paulo")
 
 _MONTHS_PT = {
     1: "janeiro", 2: "fevereiro", 3: "março", 4: "abril",
@@ -30,6 +32,8 @@ def render_site(
     if generated_at is None:
         generated_at = datetime.now(tz=timezone.utc)
 
+    generated_at_brt = generated_at.astimezone(BRT)
+
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(template_dir),
         autoescape=True,
@@ -37,11 +41,13 @@ def render_site(
         trim_blocks=True,
         lstrip_blocks=True,
     )
+    env.filters["to_brt"] = lambda dt: dt.astimezone(BRT)
+
     template = env.get_template(TEMPLATE_NAME)
     html = template.render(
         articles=articles,
-        data_formatada=_format_date_pt(generated_at),
-        gerado_em=generated_at.strftime("%Y-%m-%d %H:%M UTC"),
+        data_formatada=_format_date_pt(generated_at_brt),
+        gerado_em=generated_at_brt.strftime("%d/%m/%Y %H:%M (BRT)"),
     )
 
     output_file.parent.mkdir(parents=True, exist_ok=True)

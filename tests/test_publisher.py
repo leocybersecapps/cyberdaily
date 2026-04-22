@@ -34,6 +34,41 @@ def test_render_writes_file_with_content(tmp_path: Path):
     assert 'href="https://example.com/zero-day"' in html
 
 
+def test_render_uses_brt_timezone(tmp_path: Path):
+    # UTC 02:00 on 2026-04-23 == BRT 23:00 on 2026-04-22.
+    # Both the header date and the generated-at stamp must reflect BRT.
+    out = tmp_path / "index.html"
+    render_site(
+        [_article()],
+        generated_at=datetime(2026, 4, 23, 2, 0, tzinfo=timezone.utc),
+        output_file=out,
+    )
+    html = out.read_text(encoding="utf-8")
+
+    assert "22 de abril de 2026" in html  # BRT-adjusted header date
+    assert "22/04/2026 23:00 (BRT)" in html  # BRT-adjusted footer stamp
+    assert "UTC" not in html
+
+
+def test_article_date_converted_to_brt(tmp_path: Path):
+    # Article published at UTC 01:30 on 2026-04-22 == BRT 22:30 on 2026-04-21.
+    article = RankedArticle(
+        titulo="Notícia madrugada",
+        resumo="R",
+        por_que_importa="P",
+        gancho_conversa="G",
+        fonte="F",
+        url="https://example.com/n",
+        data_publicacao=datetime(2026, 4, 22, 1, 30, tzinfo=timezone.utc),
+    )
+    out = tmp_path / "index.html"
+    render_site([article], output_file=out)
+    html = out.read_text(encoding="utf-8")
+
+    assert "21/04/2026" in html
+    assert "22/04/2026" not in html.split("<span class=\"date\">")[1].split("</span>")[0]
+
+
 def test_render_escapes_html_in_fields(tmp_path: Path):
     article = _article('Alerta <script>alert("x")</script>')
     out = tmp_path / "index.html"

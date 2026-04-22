@@ -213,7 +213,7 @@
         <footer class="meta">
           <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
           <span class="sep">·</span>
-          <span class="date">{{ article.data_publicacao.strftime('%d/%m/%Y') }}</span>
+          <span class="date">{{ (article.data_publicacao | to_brt).strftime('%d/%m/%Y') }}</span>
         </footer>
       </article>
       {% endfor %}
