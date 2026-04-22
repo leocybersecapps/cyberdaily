@@ -12,6 +12,7 @@ def _valid_item() -> dict:
         "resumo": "Vendor divulgou patch emergencial após exploração ativa observada por múltiplos grupos.",
         "por_que_importa": "Ambiente corporativo com Widget Engine exposto tem superfície imediata.",
         "gancho_conversa": "Se o cliente X ainda roda Widget Engine na borda, é conversa pra essa semana.",
+        "leitura_comercial": "Clientes do setor financeiro vão perguntar sobre plano de resposta nas próximas semanas — boa deixa para retomar conversa.",
         "fonte": "Fixture",
         "url": "https://example.com/zero-day",
         "data_publicacao": "2026-04-22T10:00:00Z",
@@ -45,6 +46,13 @@ def test_parse_rejects_non_array_top_level():
 def test_parse_rejects_missing_required_field():
     item = _valid_item()
     del item["gancho_conversa"]
+    with pytest.raises(ValidationError):
+        parse_ranker_response(json.dumps([item]))
+
+
+def test_parse_rejects_missing_leitura_comercial():
+    item = _valid_item()
+    del item["leitura_comercial"]
     with pytest.raises(ValidationError):
         parse_ranker_response(json.dumps([item]))
 

@@ -49,6 +49,7 @@ class RankedArticle(BaseModel):
     resumo: str
     por_que_importa: str
     gancho_conversa: str
+    leitura_comercial: str
     fonte: str
     url: HttpUrl
     data_publicacao: datetime

@@ -170,18 +170,62 @@
       color: var(--accent-ai);
     }
 
+    .hooks {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin: 1rem 0 1.25rem;
+    }
+
     .hook {
       border-left: 3px solid var(--accent);
       padding: 0.85rem 1rem;
-      margin: 1rem 0 1.25rem;
       font-style: italic;
       background: var(--accent-soft);
       border-radius: 0 4px 4px 0;
     }
 
+    .hook-label {
+      display: block;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    .hook-biz {
+      border-left-color: var(--text-dim);
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-left-width: 3px;
+    }
+
+    .hook-biz .hook-label {
+      color: var(--text-dim);
+    }
+
     .section-ai .hook {
       border-left-color: var(--accent-ai);
       background: var(--accent-ai-soft);
+    }
+
+    .section-ai .hook .hook-label {
+      color: var(--accent-ai);
+    }
+
+    .section-ai .hook-biz {
+      border-left-color: var(--text-dim);
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-left-width: 3px;
+    }
+
+    .section-ai .hook-biz .hook-label {
+      color: var(--text-dim);
     }
 
     .meta {
@@ -266,7 +310,16 @@
             <span class="why-label">Por que importa</span>
             {{ article.por_que_importa }}
           </div>
-          <blockquote class="hook">{{ article.gancho_conversa }}</blockquote>
+          <div class="hooks">
+            <blockquote class="hook">
+              <span class="hook-label">Leitura técnica</span>
+              {{ article.gancho_conversa }}
+            </blockquote>
+            <blockquote class="hook hook-biz">
+              <span class="hook-label">Leitura comercial</span>
+              {{ article.leitura_comercial }}
+            </blockquote>
+          </div>
           <footer class="meta">
             <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
             <span class="sep">·</span>
@@ -296,7 +349,16 @@
             <span class="why-label">Por que importa</span>
             {{ article.por_que_importa }}
           </div>
-          <blockquote class="hook">{{ article.gancho_conversa }}</blockquote>
+          <div class="hooks">
+            <blockquote class="hook">
+              <span class="hook-label">Leitura técnica</span>
+              {{ article.gancho_conversa }}
+            </blockquote>
+            <blockquote class="hook hook-biz">
+              <span class="hook-label">Leitura comercial</span>
+              {{ article.leitura_comercial }}
+            </blockquote>
+          </div>
           <footer class="meta">
             <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
             <span class="sep">·</span>

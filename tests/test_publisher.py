@@ -11,6 +11,7 @@ def _article(titulo: str = "Zero-day no Widget Engine") -> RankedArticle:
         resumo="Exploração ativa observada por múltiplos grupos.",
         por_que_importa="Ambientes expostos têm superfície imediata.",
         gancho_conversa="Vale forçar conversa com o CISO essa semana.",
+        leitura_comercial="Clientes do setor financeiro vão perguntar sobre o tema — boa deixa para reabrir conversa.",
         fonte="Fixture",
         url="https://example.com/zero-day",
         data_publicacao=datetime(2026, 4, 22, 10, 0, tzinfo=timezone.utc),
@@ -23,6 +24,7 @@ def _ai_article(titulo: str = "GPT-X lançado em GA") -> RankedArticle:
         resumo="Vendor anunciou novo modelo com SLA enterprise.",
         por_que_importa="Muda a conta de POC para produção para quem esperava GA.",
         gancho_conversa="Quem barrou POC por 'risco de suporte' perdeu o argumento essa semana.",
+        leitura_comercial="Clientes com projeto de IA parado por falta de garantia enterprise agora têm argumento para destravar orçamento.",
         fonte="OpenAI News",
         url="https://example.com/gpt-x",
         data_publicacao=datetime(2026, 4, 22, 12, 0, tzinfo=timezone.utc),
@@ -59,6 +61,19 @@ def test_render_has_both_sections(tmp_path: Path):
     assert "IA &amp; Tech" in html
 
 
+def test_render_shows_both_tech_and_biz_hooks(tmp_path: Path):
+    out = tmp_path / "index.html"
+    render_site([_article()], [_ai_article()], output_file=out)
+    html = out.read_text(encoding="utf-8")
+    # Both labels present
+    assert "Leitura técnica" in html
+    assert "Leitura comercial" in html
+    # Both content fields rendered
+    assert "Vale forçar conversa com o CISO essa semana." in html
+    assert "reabrir conversa" in html  # from _article leitura_comercial
+    assert "destravar orçamento" in html  # from _ai_article leitura_comercial
+
+
 def test_render_uses_brt_timezone(tmp_path: Path):
     # UTC 02:00 on 2026-04-23 == BRT 23:00 on 2026-04-22.
     out = tmp_path / "index.html"
@@ -82,6 +97,7 @@ def test_article_date_converted_to_brt(tmp_path: Path):
         resumo="R",
         por_que_importa="P",
         gancho_conversa="G",
+        leitura_comercial="L",
         fonte="F",
         url="https://example.com/n",
         data_publicacao=datetime(2026, 4, 22, 1, 30, tzinfo=timezone.utc),
