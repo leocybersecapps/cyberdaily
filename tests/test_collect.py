@@ -11,6 +11,7 @@ def _article(url: str, title: str = "T") -> RawArticle:
         published_at=datetime(2026, 4, 22, 10, 0, tzinfo=timezone.utc),
         source_name="S",
         source_tier=2,
+        source_category="cyber",
     )
 
 

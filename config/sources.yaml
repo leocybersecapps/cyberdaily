@@ -3,64 +3,128 @@
 # Estrutura:
 #   - name: nome legível da fonte (aparece no site)
 #   - url: URL do feed RSS/Atom (OBRIGATÓRIO HTTPS)
-#   - tier: 1 = primária/autoritativa (vendor threat intel, avisos oficiais)
+#   - tier: 1 = primária/autoritativa (vendor threat intel, avisos oficiais,
+#               pesquisa primária)
 #           2 = veículo de notícias principal
+#   - category: "cyber" (padrão) ou "ai" — define em qual seção do site entra
 #   - tags: metadados para filtro/debug (opcional)
 #
 # Regra: rejeitar qualquer feed que não responda 200 com TLS válido.
 # Para adicionar: confirmar URL do RSS no site da fonte antes de commitar.
 
 sources:
+  # ═══════════════════════════════════════════════════════════════
+  # CYBER
+  # ═══════════════════════════════════════════════════════════════
+
   # ── Tier 1 ──────────────────────────────────────────────────────
   - name: CISA Cybersecurity Advisories
     url: https://www.cisa.gov/cybersecurity-advisories/all.xml
     tier: 1
+    category: cyber
     tags: [advisory, gov]
 
   - name: Cisco Talos
     url: https://blog.talosintelligence.com/rss/
     tier: 1
+    category: cyber
     tags: [threat-intel, vendor]
 
   - name: Palo Alto Unit 42
     url: https://unit42.paloaltonetworks.com/feed/
     tier: 1
+    category: cyber
     tags: [threat-intel, vendor]
 
   - name: Schneier on Security
     url: https://www.schneier.com/feed/atom/
     tier: 1
+    category: cyber
     tags: [analysis, opinion]
 
   - name: SANS ISC Diary
     url: https://isc.sans.edu/rssfeed.xml
     tier: 1
+    category: cyber
     tags: [threat-intel, community]
 
   # ── Tier 2 ──────────────────────────────────────────────────────
   - name: The Hacker News
     url: https://feeds.feedburner.com/TheHackersNews
     tier: 2
+    category: cyber
     tags: [news]
 
   - name: BleepingComputer
     url: https://www.bleepingcomputer.com/feed/
     tier: 2
+    category: cyber
     tags: [news]
 
   - name: Krebs on Security
     url: https://krebsonsecurity.com/feed/
     tier: 2
+    category: cyber
     tags: [news, investigative]
 
   - name: Dark Reading
     url: https://www.darkreading.com/rss.xml
     tier: 2
+    category: cyber
     tags: [news]
 
   - name: SecurityWeek
     url: https://www.securityweek.com/feed/
     tier: 2
+    category: cyber
+    tags: [news]
+
+  # ═══════════════════════════════════════════════════════════════
+  # IA & TECH
+  # ═══════════════════════════════════════════════════════════════
+
+  # ── Tier 1 ──────────────────────────────────────────────────────
+  - name: OpenAI News
+    url: https://openai.com/news/rss.xml
+    tier: 1
+    category: ai
+    tags: [vendor, product]
+
+  - name: Google DeepMind
+    url: https://deepmind.google/blog/rss.xml
+    tier: 1
+    category: ai
+    tags: [vendor, research]
+
+  - name: Google Research
+    url: https://research.google/blog/rss/
+    tier: 1
+    category: ai
+    tags: [vendor, research]
+
+  # ── Tier 2 ──────────────────────────────────────────────────────
+  - name: MIT Technology Review — AI
+    url: https://www.technologyreview.com/topic/artificial-intelligence/feed
+    tier: 2
+    category: ai
+    tags: [news, analysis]
+
+  - name: TechCrunch AI
+    url: https://techcrunch.com/category/artificial-intelligence/feed/
+    tier: 2
+    category: ai
+    tags: [news]
+
+  - name: The Verge — AI
+    url: https://www.theverge.com/rss/ai-artificial-intelligence/index.xml
+    tier: 2
+    category: ai
+    tags: [news]
+
+  - name: Ars Technica — AI
+    url: https://arstechnica.com/ai/feed/
+    tier: 2
+    category: ai
     tags: [news]
 
 # Candidatas para adicionar depois (confirmar URL de RSS antes):
@@ -69,3 +133,5 @@ sources:
 #   - Microsoft Threat Intelligence Blog
 #   - Risky Business News
 #   - CISA KEV (como feed JSON — tratamento especial no collector)
+#   - Anthropic News (sem RSS oficial na última checagem)
+#   - Microsoft AI Blog, Meta AI Research (RSS a confirmar)

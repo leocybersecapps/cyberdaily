@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
-  <meta name="description" content="Top 5 notícias de cybersecurity do dia — curadoria com ângulo executivo.">
+  <meta name="description" content="Curadoria diária de cybersecurity + IA com ângulo executivo.">
   <title>CyberDaily · {{ data_formatada }}</title>
   <style>
     :root {
@@ -15,6 +15,8 @@
       --border: #27272a;
       --accent: #22d3ee;
       --accent-soft: rgba(34, 211, 238, 0.08);
+      --accent-ai: #a78bfa;
+      --accent-ai-soft: rgba(167, 139, 250, 0.08);
     }
 
     @media (prefers-color-scheme: light) {
@@ -26,6 +28,8 @@
         --border: #e4e4e7;
         --accent: #0891b2;
         --accent-soft: rgba(8, 145, 178, 0.08);
+        --accent-ai: #7c3aed;
+        --accent-ai-soft: rgba(124, 58, 237, 0.08);
       }
     }
 
@@ -78,6 +82,38 @@
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     }
 
+    .section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      color: var(--accent);
+    }
+
+    .section-ai .section-header h2 {
+      color: var(--accent-ai);
+    }
+
+    .section-header .section-count {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -100,7 +136,7 @@
       border: 1px solid var(--border);
     }
 
-    .card h2 {
+    .card h3 {
       font-size: 1.3rem;
       font-weight: 600;
       line-height: 1.3;
@@ -130,6 +166,10 @@
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     }
 
+    .section-ai .why-label {
+      color: var(--accent-ai);
+    }
+
     .hook {
       border-left: 3px solid var(--accent);
       padding: 0.85rem 1rem;
@@ -137,6 +177,11 @@
       font-style: italic;
       background: var(--accent-soft);
       border-radius: 0 4px 4px 0;
+    }
+
+    .section-ai .hook {
+      border-left-color: var(--accent-ai);
+      background: var(--accent-ai-soft);
     }
 
     .meta {
@@ -156,6 +201,10 @@
       text-decoration: none;
     }
 
+    .section-ai .meta a {
+      color: var(--accent-ai);
+    }
+
     .meta a:hover,
     .meta a:focus-visible {
       text-decoration: underline;
@@ -168,9 +217,10 @@
     .empty {
       text-align: center;
       color: var(--text-dim);
-      padding: 3rem 1rem;
+      padding: 2rem 1rem;
       border: 1px dashed var(--border);
       border-radius: 8px;
+      font-size: 0.9rem;
     }
 
     .site-footer {
@@ -187,7 +237,7 @@
       body { padding: 1.25rem 0.75rem 2rem; }
       .card { padding: 1.25rem; }
       .page-header h1 { font-size: 1.55rem; }
-      .card h2 { font-size: 1.15rem; }
+      .card h3 { font-size: 1.15rem; }
       .rank { top: 1rem; right: 1rem; }
     }
   </style>
@@ -195,31 +245,69 @@
 <body>
   <header class="page-header">
     <h1>CyberDaily</h1>
-    <p class="subtitle">Top 5 · {{ data_formatada }}</p>
+    <p class="subtitle">Cyber + IA · {{ data_formatada }}</p>
   </header>
 
   <main>
-    {% if articles %}
-      {% for article in articles %}
-      <article class="card">
-        <span class="rank">#{{ loop.index }}</span>
-        <h2>{{ article.titulo }}</h2>
-        <p class="summary">{{ article.resumo }}</p>
-        <div class="why">
-          <span class="why-label">Por que importa</span>
-          {{ article.por_que_importa }}
-        </div>
-        <blockquote class="hook">{{ article.gancho_conversa }}</blockquote>
-        <footer class="meta">
-          <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
-          <span class="sep">·</span>
-          <span class="date">{{ (article.data_publicacao | to_brt).strftime('%d/%m/%Y') }}</span>
-        </footer>
-      </article>
-      {% endfor %}
-    {% else %}
-      <p class="empty">Sem notícias disponíveis hoje.</p>
-    {% endif %}
+    <section class="section section-cyber" aria-labelledby="sec-cyber">
+      <div class="section-header">
+        <h2 id="sec-cyber">Top Cyber</h2>
+        {% if articles_cyber %}
+        <span class="section-count">{{ articles_cyber | length }} hoje</span>
+        {% endif %}
+      </div>
+      {% if articles_cyber %}
+        {% for article in articles_cyber %}
+        <article class="card">
+          <span class="rank">#{{ loop.index }}</span>
+          <h3>{{ article.titulo }}</h3>
+          <p class="summary">{{ article.resumo }}</p>
+          <div class="why">
+            <span class="why-label">Por que importa</span>
+            {{ article.por_que_importa }}
+          </div>
+          <blockquote class="hook">{{ article.gancho_conversa }}</blockquote>
+          <footer class="meta">
+            <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
+            <span class="sep">·</span>
+            <span class="date">{{ (article.data_publicacao | to_brt).strftime('%d/%m/%Y') }}</span>
+          </footer>
+        </article>
+        {% endfor %}
+      {% else %}
+        <p class="empty">Sem curadoria de cyber hoje.</p>
+      {% endif %}
+    </section>
+
+    <section class="section section-ai" aria-labelledby="sec-ai">
+      <div class="section-header">
+        <h2 id="sec-ai">IA &amp; Tech</h2>
+        {% if articles_ai %}
+        <span class="section-count">{{ articles_ai | length }} hoje</span>
+        {% endif %}
+      </div>
+      {% if articles_ai %}
+        {% for article in articles_ai %}
+        <article class="card">
+          <span class="rank">#{{ loop.index }}</span>
+          <h3>{{ article.titulo }}</h3>
+          <p class="summary">{{ article.resumo }}</p>
+          <div class="why">
+            <span class="why-label">Por que importa</span>
+            {{ article.por_que_importa }}
+          </div>
+          <blockquote class="hook">{{ article.gancho_conversa }}</blockquote>
+          <footer class="meta">
+            <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
+            <span class="sep">·</span>
+            <span class="date">{{ (article.data_publicacao | to_brt).strftime('%d/%m/%Y') }}</span>
+          </footer>
+        </article>
+        {% endfor %}
+      {% else %}
+        <p class="empty">Sem curadoria de IA hoje.</p>
+      {% endif %}
+    </section>
   </main>
 
   <footer class="site-footer">

@@ -5,11 +5,12 @@ from src.collector.fetch import parse_feed
 from src.models import Source
 
 
-def _source() -> Source:
+def _source(category: str = "cyber") -> Source:
     return Source(
         name="Fixture",
         url="https://example.com/feed.xml",
         tier=2,
+        category=category,
     )
 
 
@@ -32,7 +33,16 @@ def test_parse_feed_sets_source_metadata(fixtures_dir: Path):
     for article in articles:
         assert article.source_name == source.name
         assert article.source_tier == source.tier
+        assert article.source_category == source.category
         assert article.published_at.tzinfo is not None
+
+
+def test_parse_feed_propagates_ai_category(fixtures_dir: Path):
+    content = (fixtures_dir / "sample_feed.xml").read_bytes()
+    source = _source(category="ai")
+    articles = parse_feed(content, source)
+    assert articles
+    assert all(a.source_category == "ai" for a in articles)
 
 
 def test_parse_feed_dates_are_utc(fixtures_dir: Path):

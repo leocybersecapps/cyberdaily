@@ -17,10 +17,23 @@ def _article(titulo: str = "Zero-day no Widget Engine") -> RankedArticle:
     )
 
 
+def _ai_article(titulo: str = "GPT-X lançado em GA") -> RankedArticle:
+    return RankedArticle(
+        titulo=titulo,
+        resumo="Vendor anunciou novo modelo com SLA enterprise.",
+        por_que_importa="Muda a conta de POC para produção para quem esperava GA.",
+        gancho_conversa="Quem barrou POC por 'risco de suporte' perdeu o argumento essa semana.",
+        fonte="OpenAI News",
+        url="https://example.com/gpt-x",
+        data_publicacao=datetime(2026, 4, 22, 12, 0, tzinfo=timezone.utc),
+    )
+
+
 def test_render_writes_file_with_content(tmp_path: Path):
     out = tmp_path / "index.html"
     render_site(
         [_article("Breach massivo"), _article("Zero-day crítico")],
+        [_ai_article("Novo modelo GA")],
         generated_at=datetime(2026, 4, 22, 9, 30, tzinfo=timezone.utc),
         output_file=out,
     )
@@ -29,17 +42,29 @@ def test_render_writes_file_with_content(tmp_path: Path):
     assert "CyberDaily" in html
     assert "Breach massivo" in html
     assert "Zero-day crítico" in html
+    assert "Novo modelo GA" in html
     assert "22 de abril de 2026" in html
     assert "22/04/2026" in html
     assert 'href="https://example.com/zero-day"' in html
+    assert 'href="https://example.com/gpt-x"' in html
+
+
+def test_render_has_both_sections(tmp_path: Path):
+    out = tmp_path / "index.html"
+    render_site([_article()], [_ai_article()], output_file=out)
+    html = out.read_text(encoding="utf-8")
+    assert "section-cyber" in html
+    assert "section-ai" in html
+    assert "Top Cyber" in html
+    assert "IA &amp; Tech" in html
 
 
 def test_render_uses_brt_timezone(tmp_path: Path):
     # UTC 02:00 on 2026-04-23 == BRT 23:00 on 2026-04-22.
-    # Both the header date and the generated-at stamp must reflect BRT.
     out = tmp_path / "index.html"
     render_site(
         [_article()],
+        [_ai_article()],
         generated_at=datetime(2026, 4, 23, 2, 0, tzinfo=timezone.utc),
         output_file=out,
     )
@@ -51,7 +76,7 @@ def test_render_uses_brt_timezone(tmp_path: Path):
 
 
 def test_article_date_converted_to_brt(tmp_path: Path):
-    # Article published at UTC 01:30 on 2026-04-22 == BRT 22:30 on 2026-04-21.
+    # UTC 01:30 on 2026-04-22 == BRT 22:30 on 2026-04-21.
     article = RankedArticle(
         titulo="Notícia madrugada",
         resumo="R",
@@ -80,11 +105,33 @@ def test_render_escapes_html_in_fields(tmp_path: Path):
     assert "&lt;script&gt;" in html
 
 
-def test_render_empty_shows_placeholder(tmp_path: Path):
+def test_render_empty_cyber_shows_placeholder(tmp_path: Path):
     out = tmp_path / "index.html"
-    render_site([], output_file=out)
+    render_site([], [_ai_article()], output_file=out)
     html = out.read_text(encoding="utf-8")
-    assert "Sem notícias disponíveis hoje." in html
+    assert "Sem curadoria de cyber hoje." in html
+
+
+def test_render_empty_ai_shows_placeholder(tmp_path: Path):
+    out = tmp_path / "index.html"
+    render_site([_article()], [], output_file=out)
+    html = out.read_text(encoding="utf-8")
+    assert "Sem curadoria de IA hoje." in html
+
+
+def test_render_both_empty_shows_both_placeholders(tmp_path: Path):
+    out = tmp_path / "index.html"
+    render_site([], [], output_file=out)
+    html = out.read_text(encoding="utf-8")
+    assert "Sem curadoria de cyber hoje." in html
+    assert "Sem curadoria de IA hoje." in html
+
+
+def test_ai_articles_default_to_empty_when_omitted(tmp_path: Path):
+    out = tmp_path / "index.html"
+    render_site([_article()], output_file=out)
+    html = out.read_text(encoding="utf-8")
+    assert "Sem curadoria de IA hoje." in html
 
 
 def test_render_includes_csp_header(tmp_path: Path):

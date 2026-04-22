@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
 
 
 Tier = Literal[1, 2]
+Category = Literal["cyber", "ai"]
 
 
 class Source(BaseModel):
@@ -13,6 +14,7 @@ class Source(BaseModel):
     name: str
     url: HttpUrl
     tier: Tier
+    category: Category = "cyber"
     tags: list[str] = Field(default_factory=list)
 
     @field_validator("url")
@@ -32,6 +34,7 @@ class RawArticle(BaseModel):
     published_at: datetime
     source_name: str
     source_tier: Tier
+    source_category: Category
 
 
 class RankedArticle(BaseModel):

@@ -24,11 +24,14 @@ _MONTHS_PT = {
 
 
 def render_site(
-    articles: list[RankedArticle],
+    articles_cyber: list[RankedArticle],
+    articles_ai: list[RankedArticle] | None = None,
     generated_at: datetime | None = None,
     output_file: Path = OUTPUT_FILE,
     template_dir: Path = TEMPLATE_DIR,
 ) -> Path:
+    if articles_ai is None:
+        articles_ai = []
     if generated_at is None:
         generated_at = datetime.now(tz=timezone.utc)
 
@@ -45,14 +48,20 @@ def render_site(
 
     template = env.get_template(TEMPLATE_NAME)
     html = template.render(
-        articles=articles,
+        articles_cyber=articles_cyber,
+        articles_ai=articles_ai,
         data_formatada=_format_date_pt(generated_at_brt),
         gerado_em=generated_at_brt.strftime("%d/%m/%Y %H:%M (BRT)"),
     )
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(html, encoding="utf-8")
-    log.info("wrote %s (%d articles)", output_file, len(articles))
+    log.info(
+        "wrote %s (%d cyber, %d ai)",
+        output_file,
+        len(articles_cyber),
+        len(articles_ai),
+    )
     return output_file
 
 

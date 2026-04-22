@@ -61,6 +61,7 @@ def _entry_to_article(entry, source: Source) -> RawArticle | None:
             published_at=published_at,
             source_name=source.name,
             source_tier=source.tier,
+            source_category=source.category,
         )
     except Exception as exc:
         log.warning("skipping invalid entry from %s: %s", source.name, exc)

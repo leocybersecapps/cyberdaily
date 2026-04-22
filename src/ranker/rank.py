@@ -10,7 +10,10 @@ from src.models import RankedArticle, RawArticle
 
 log = logging.getLogger(__name__)
 
-PROMPT_PATH = Path(__file__).parent / "prompt.md"
+PROMPTS_DIR = Path(__file__).parent
+PROMPT_CYBER = PROMPTS_DIR / "prompt.md"
+PROMPT_AI = PROMPTS_DIR / "prompt_ai.md"
+
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 4096
 TEMPERATURE = 0.3
@@ -20,6 +23,7 @@ _FENCE_RE = re.compile(r"^```(?:json)?\s*\n(.*?)\n```\s*$", re.DOTALL)
 
 def rank_articles(
     candidates: list[RawArticle],
+    prompt_path: Path = PROMPT_CYBER,
     client: Anthropic | None = None,
 ) -> list[RankedArticle]:
     if not candidates:
@@ -27,10 +31,15 @@ def rank_articles(
         return []
 
     client = client or Anthropic()
-    system_prompt = PROMPT_PATH.read_text(encoding="utf-8")
+    system_prompt = prompt_path.read_text(encoding="utf-8")
     user_message = _build_user_message(candidates)
 
-    log.info("ranking %d candidates with %s", len(candidates), MODEL)
+    log.info(
+        "ranking %d candidates with %s (prompt=%s)",
+        len(candidates),
+        MODEL,
+        prompt_path.name,
+    )
     response = client.messages.create(
         model=MODEL,
         max_tokens=MAX_TOKENS,
