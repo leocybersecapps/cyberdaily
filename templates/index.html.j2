@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ strings.lang_code }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
-  <meta name="description" content="Curadoria diária de cybersecurity + IA com ângulo executivo.">
+  <meta name="description" content="{{ strings.meta_description }}">
+  <link rel="alternate" hreflang="{{ strings.other_lang_hreflang }}" href="{{ strings.other_lang_href }}">
   <title>CyberDaily · {{ data_formatada }}</title>
   <style>
     :root {
@@ -59,6 +60,7 @@
       padding-bottom: 1.75rem;
       margin-bottom: 2rem;
       border-bottom: 1px solid var(--border);
+      position: relative;
     }
 
     .page-header h1 {
@@ -80,6 +82,35 @@
       font-size: 0.9rem;
       margin-top: 0.5rem;
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    .lang-switch {
+      margin-top: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+    }
+
+    .lang-switch .current {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .lang-switch .other {
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+
+    .lang-switch .other:hover,
+    .lang-switch .other:focus-visible {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .lang-switch .sep {
+      color: var(--border);
     }
 
     .section {
@@ -289,15 +320,20 @@
 <body>
   <header class="page-header">
     <h1>CyberDaily</h1>
-    <p class="subtitle">Cyber + IA · {{ data_formatada }}</p>
+    <p class="subtitle">{{ strings.subtitle }} · {{ data_formatada }}</p>
+    <nav class="lang-switch" aria-label="Language">
+      <span class="current" aria-current="true">{{ strings.this_lang_label }}</span>
+      <span class="sep">·</span>
+      <a class="other" href="{{ strings.other_lang_href }}" hreflang="{{ strings.other_lang_hreflang }}">{{ strings.other_lang_label }}</a>
+    </nav>
   </header>
 
   <main>
     <section class="section section-cyber" aria-labelledby="sec-cyber">
       <div class="section-header">
-        <h2 id="sec-cyber">Top Cyber</h2>
+        <h2 id="sec-cyber">{{ strings.section_cyber }}</h2>
         {% if articles_cyber %}
-        <span class="section-count">{{ articles_cyber | length }} hoje</span>
+        <span class="section-count">{{ articles_cyber | length }} {{ strings.count_suffix }}</span>
         {% endif %}
       </div>
       {% if articles_cyber %}
@@ -307,36 +343,36 @@
           <h3>{{ article.titulo }}</h3>
           <p class="summary">{{ article.resumo }}</p>
           <div class="why">
-            <span class="why-label">Por que importa</span>
+            <span class="why-label">{{ strings.why_label }}</span>
             {{ article.por_que_importa }}
           </div>
           <div class="hooks">
             <blockquote class="hook">
-              <span class="hook-label">Leitura técnica</span>
+              <span class="hook-label">{{ strings.hook_tech_label }}</span>
               {{ article.gancho_conversa }}
             </blockquote>
             <blockquote class="hook hook-biz">
-              <span class="hook-label">Leitura comercial</span>
+              <span class="hook-label">{{ strings.hook_biz_label }}</span>
               {{ article.leitura_comercial }}
             </blockquote>
           </div>
           <footer class="meta">
             <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
             <span class="sep">·</span>
-            <span class="date">{{ (article.data_publicacao | to_brt).strftime('%d/%m/%Y') }}</span>
+            <span class="date">{{ article.data_publicacao | to_brt | short_date }}</span>
           </footer>
         </article>
         {% endfor %}
       {% else %}
-        <p class="empty">Sem curadoria de cyber hoje.</p>
+        <p class="empty">{{ strings.empty_cyber }}</p>
       {% endif %}
     </section>
 
     <section class="section section-ai" aria-labelledby="sec-ai">
       <div class="section-header">
-        <h2 id="sec-ai">IA &amp; Tech</h2>
+        <h2 id="sec-ai">{{ strings.section_ai }}</h2>
         {% if articles_ai %}
-        <span class="section-count">{{ articles_ai | length }} hoje</span>
+        <span class="section-count">{{ articles_ai | length }} {{ strings.count_suffix }}</span>
         {% endif %}
       </div>
       {% if articles_ai %}
@@ -346,34 +382,34 @@
           <h3>{{ article.titulo }}</h3>
           <p class="summary">{{ article.resumo }}</p>
           <div class="why">
-            <span class="why-label">Por que importa</span>
+            <span class="why-label">{{ strings.why_label }}</span>
             {{ article.por_que_importa }}
           </div>
           <div class="hooks">
             <blockquote class="hook">
-              <span class="hook-label">Leitura técnica</span>
+              <span class="hook-label">{{ strings.hook_tech_label }}</span>
               {{ article.gancho_conversa }}
             </blockquote>
             <blockquote class="hook hook-biz">
-              <span class="hook-label">Leitura comercial</span>
+              <span class="hook-label">{{ strings.hook_biz_label }}</span>
               {{ article.leitura_comercial }}
             </blockquote>
           </div>
           <footer class="meta">
             <a href="{{ article.url }}" rel="noopener noreferrer" target="_blank">{{ article.fonte }}</a>
             <span class="sep">·</span>
-            <span class="date">{{ (article.data_publicacao | to_brt).strftime('%d/%m/%Y') }}</span>
+            <span class="date">{{ article.data_publicacao | to_brt | short_date }}</span>
           </footer>
         </article>
         {% endfor %}
       {% else %}
-        <p class="empty">Sem curadoria de IA hoje.</p>
+        <p class="empty">{{ strings.empty_ai }}</p>
       {% endif %}
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>Gerado automaticamente em {{ gerado_em }}</p>
+    <p>{{ strings.footer_prefix }} {{ gerado_em }}</p>
   </footer>
 </body>
 </html>

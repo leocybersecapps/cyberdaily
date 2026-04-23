@@ -157,3 +157,55 @@ def test_render_includes_csp_header(tmp_path: Path):
     assert "Content-Security-Policy" in html
     assert "default-src 'none'" in html
     assert "script-src" not in html  # scripts blocked via default-src 'none'
+
+
+def test_render_pt_has_language_switcher_to_en(tmp_path: Path):
+    out = tmp_path / "index.html"
+    render_site([_article()], [_ai_article()], output_file=out, lang="pt")
+    html = out.read_text(encoding="utf-8")
+    assert 'lang="pt-BR"' in html
+    assert 'href="en/index.html"' in html
+    assert 'hreflang="en"' in html
+
+
+def test_render_en_writes_english_content(tmp_path: Path):
+    out = tmp_path / "en" / "index.html"
+    article_en = RankedArticle(
+        titulo="Critical zero-day in Widget Engine",
+        resumo="Active exploitation observed across multiple groups.",
+        por_que_importa="Exposed environments have immediate surface.",
+        gancho_conversa="Worth forcing a conversation with the CISO this week.",
+        leitura_comercial="Financial-sector clients will ask about response plans — good reopener.",
+        fonte="Fixture",
+        url="https://example.com/zero-day",
+        data_publicacao=datetime(2026, 4, 22, 10, 0, tzinfo=timezone.utc),
+    )
+    render_site(
+        [article_en],
+        [],
+        generated_at=datetime(2026, 4, 22, 9, 30, tzinfo=timezone.utc),
+        output_file=out,
+        lang="en",
+    )
+    html = out.read_text(encoding="utf-8")
+
+    assert 'lang="en"' in html
+    assert "Critical zero-day in Widget Engine" in html
+    assert "Why it matters" in html
+    assert "Technical read" in html
+    assert "Business read" in html
+    assert "No AI curation today." in html
+    assert "April 22, 2026" in html
+    assert "2026-04-22" in html  # short date in EN
+    assert 'href="../index.html"' in html
+    assert 'hreflang="pt-BR"' in html
+    # PT-only strings must not leak
+    assert "Por que importa" not in html
+    assert "Leitura técnica" not in html
+    assert "Sem curadoria" not in html
+
+
+def test_render_rejects_unknown_lang(tmp_path: Path):
+    import pytest as _pytest
+    with _pytest.raises(ValueError):
+        render_site([_article()], output_file=tmp_path / "x.html", lang="fr")
