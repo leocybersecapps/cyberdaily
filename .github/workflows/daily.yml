@@ -1,10 +1,10 @@
 name: Daily build
 
-# Roda 1x/dia de manhã (07:00 BRT = 10:00 UTC).
+# Roda 1x/dia de manhã (08:00 BRT = 11:00 UTC).
 # Também pode ser disparado manualmente pela aba Actions.
 on:
   schedule:
-    - cron: "0 10 * * *"
+    - cron: "0 11 * * *"
   workflow_dispatch:
 
 # Permissões necessárias para publicar no GitHub Pages via artifact.
