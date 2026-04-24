@@ -79,6 +79,12 @@ sources:
     category: cyber
     tags: [news]
 
+  - name: Cyber Security News
+    url: https://cybersecuritynews.com/feed/
+    tier: 2
+    category: cyber
+    tags: [news]
+
   # ═══════════════════════════════════════════════════════════════
   # IA & TECH
   # ═══════════════════════════════════════════════════════════════
@@ -98,6 +104,18 @@ sources:
 
   - name: Google Research
     url: https://research.google/blog/rss/
+    tier: 1
+    category: ai
+    tags: [vendor, research]
+
+  - name: Hugging Face Blog
+    url: https://huggingface.co/blog/feed.xml
+    tier: 1
+    category: ai
+    tags: [vendor, research, community]
+
+  - name: NVIDIA Developer Blog
+    url: https://developer.nvidia.com/blog/feed/
     tier: 1
     category: ai
     tags: [vendor, research]
