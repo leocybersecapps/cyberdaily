@@ -85,6 +85,12 @@ sources:
     category: cyber
     tags: [news]
 
+  - name: Cloud Security Alliance
+    url: https://cloudsecurityalliance.org/feed/
+    tier: 2
+    category: cyber
+    tags: [analysis, research, industry]
+
   # ═══════════════════════════════════════════════════════════════
   # IA & TECH
   # ═══════════════════════════════════════════════════════════════
