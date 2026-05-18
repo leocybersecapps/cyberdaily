@@ -4,6 +4,8 @@ Curadoria diária de cybersecurity + IA & tech, feita com a API do Claude — co
 
 🔗 **Site ao vivo:** https://leocybersecapps.github.io/cyberdaily/ (EN: [/en/](https://leocybersecapps.github.io/cyberdaily/en/))
 
+> **Status:** ✅ Funcional e rodando em produção via GitHub Actions (cron diário às 08:00 BRT).
+
 ---
 
 ## O que é

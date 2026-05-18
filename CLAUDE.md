@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status do projeto
 
-**Pré-implementação.** Neste momento, o repositório contém apenas este `CLAUDE.md`. A arquitetura, stack e convenções abaixo são o *contrato alvo* — diretrizes para o código a ser escrito. Arquivos e diretórios mencionados (ex.: `src/`, `config/sources.yaml`, `templates/`, `.github/workflows/daily.yml`) ainda não existem; criá-los é parte do trabalho.
+**Funcional e em produção.** O projeto está rodando há semanas via GitHub Actions (cron diário às 08:00 BRT). O site está publicado em https://leocybersecapps.github.io/cyberdaily/
 
 # CyberDaily — Top 5 Cyber News
 
